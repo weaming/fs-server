@@ -1,7 +1,11 @@
 import asyncio
 import socket
-import os, select
+import os, select, io
 from sendfile import sendfile
+
+from http_parser.http import HttpStream
+from http_parser.parser import HttpParser
+
 
 host = 'localhost'
 port = 9527
@@ -15,6 +19,7 @@ s.listen(10)
 
 async def handler(conn):
     print(conn)
+
     request = b''
     while True:
         rs, _, es = select.select([conn], [], [conn])
@@ -25,6 +30,11 @@ async def handler(conn):
                 break
         asyncio.sleep(0.01)
     print(data)
+
+    parser = HttpParser()
+    parser.execute(data, len(data)), len(data)
+    assert parser.is_headers_complete()
+    assert parser.is_message_complete()
 
     # Attempt 1
     # with open('requirements.lock', 'rb') as f:
