@@ -68,7 +68,7 @@ async def handler(conn):
             elif fl.is_dir():
                 files = fl.listdir()
                 body = '<br/>'.join(
-                    f'<a href="{url_path.rstrip("/")}/{x.basename}">{x.basename}</a>'
+                    f'<a href="{url_path.rstrip("/")}/{x.basename}{"/" if x.is_dir() else ""}">{x.basename}{"/" if x.is_dir() else ""}</a>'
                     for x in files
                 ).encode('utf8')
                 conn.send(b'HTTP/1.1 200 OK\r\n')
@@ -76,12 +76,11 @@ async def handler(conn):
                 conn.send(b'Content-Type: text/html; charset=utf-8\r\n')
                 conn.send(b'\r\n')
                 conn.sendall(body)
-            else:
-                conn.send(b'HTTP/1.1 404 Not Found\r\n')
-                conn.sendall(b'\r\n')
-        else:
-            conn.send(b'HTTP/1.1 404 Not Found\r\n')
-            conn.sendall(b'\r\n')
+
+    conn.send(b'HTTP/1.1 404 Not Found\r\n')
+    conn.send(b'Content-Type: text/plain; charset=utf-8\r\n')
+    conn.send(b'\r\n')
+    conn.sendall(b'Not Found')
     conn.close()
 
 
@@ -120,14 +119,14 @@ def get_mapping(config_path):
     if config_path:
         cfg = File(config_path)
         if cfg.exists():
-            with open(cfg.abspath, 'r') as f:
+            with open(cfg.path, 'r') as f:
                 cfg_dict = json.load(f)
                 assert isinstance(cfg_dict, dict)
                 return [FileSystem(k, v) for k, v in cfg_dict.items()]
     return [FileSystem('/', './')]
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", "--config", help="file path of config in json format")
     parser.add_argument("--host", help="listen host", default='localhost')
@@ -142,6 +141,7 @@ if __name__ == '__main__':
 
     host = args.host
     port = int(args.port)
+    global mapping
     mapping = get_mapping(args.config)
     print(mapping)
 
@@ -156,3 +156,7 @@ if __name__ == '__main__':
     loop.create_task(server(loop, s))
     loop.run_forever()
     loop.close()
+
+
+if __name__ == '__main__':
+    main()
