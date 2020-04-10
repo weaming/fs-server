@@ -26,7 +26,7 @@ def get_version(path):
 long_description = read_text("README.md")
 install_requires = [
     l
-    for l in read_text("requirements.txt").split("\n")
+    for l in read_text("requirements.lock").split("\n")
     if l.strip() and not l.strip().startswith("#")
 ]
 
