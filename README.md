@@ -10,7 +10,7 @@ See example [config.json](./config.json) for quick setup.
 
 ```shell
 usage: fs-server [-h] [-c CONFIG] [--host HOST] [--port PORT]
-                 [--concurrent CONCURRENT]
+                 [--backlog BACKLOG]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -18,8 +18,8 @@ optional arguments:
                         file path of config in json format
   --host HOST           listen host
   --port PORT           listen port
-  --concurrent CONCURRENT
-                        serve how many connections at a time
+  --backlog BACKLOG     the number of unaccepted connections that the system
+                        will allow before refusing new connections
 ```
 
 ## Benchmark

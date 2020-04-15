@@ -132,8 +132,8 @@ def main():
     parser.add_argument("--host", help="listen host", default='localhost')
     parser.add_argument("--port", help="listen port", type=int, default=8080)
     parser.add_argument(
-        "--concurrent",
-        help="serve how many connections at a time",
+        "--backlog",
+        help="the number of unaccepted connections that the system will allow before refusing new connections",
         type=int,
         default=1000,
     )
@@ -151,7 +151,7 @@ def main():
     s.setblocking(False)
 
     s.bind((host, port))
-    s.listen(args.concurrent)
+    s.listen(args.backlog)
 
     loop.create_task(server(loop, s))
     loop.run_forever()
