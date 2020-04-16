@@ -1,5 +1,9 @@
 # FS Server
 
+Static file server using [sendfile](https://linux.die.net/man/2/sendfile)
+
+## Install
+
 ```shell
 pip3 install fs-server
 ```
