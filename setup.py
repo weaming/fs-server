@@ -31,7 +31,7 @@ install_requires = [
 ]
 
 name = "fs_server"
-gh_repo = "https://github.com/weaming/{}".format(name)
+gh_repo = "https://github.com/weaming/fs-server"
 
 setup(
     name=name,  # Required
